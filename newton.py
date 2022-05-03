@@ -11,11 +11,18 @@ def tolerancia(cifras):
 def errorAproximacion(valorActual,valorAnterior):
     return abs((valorActual - valorAnterior)/(valorActual))*100
 
-def newton(fx,deriv,seg_deriv,x0,cifras):
+def derivar(funcion):
+    x,y,z,e=symbols('x y z e')
+    funcion=simplify(funcion).subs(e,math.e)
+    derivada=diff(funcion)
+    return str(derivada)
+
+
+def newton(fx,x0,cifras):
     #Probar convergencia
     fx=simplify(fx)
-    deriv=simplify(deriv)
-    seg_deriv=simplify(seg_deriv)
+    deriv=simplify(derivar(fx))
+    seg_deriv=simplify(derivar(deriv))
 
     fx0=fx.subs(x,x0).subs(e,math.e)
     deriv=deriv.subs(x,x0).subs(e,math.e)
@@ -42,5 +49,5 @@ def newton(fx,deriv,seg_deriv,x0,cifras):
     else:
         print("La funcion no converge")
     return tabla
-lista=newton("e**(x-1)+x","e**(x-1)+1","e**(x-1)",-0.3,3)
+lista=newton("e**(x-1)+x",-0.3,3)
 print(tabulate(lista,headers = ["Iteracion", "Xi", "f(Xi)", "f'(Xi)","Xi+1","Ea"],tablefmt="github"))
