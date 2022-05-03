@@ -12,7 +12,7 @@ def errorAproximacion(valorActual,valorAnterior):
     return abs((valorActual - valorAnterior)/(valorActual))*100
 
 def derivar(funcion):
-    x,y,z,e=symbols('x y z e')
+    e=symbols('e')
     funcion=simplify(funcion).subs(e,math.e)
     derivada=diff(funcion)
     return str(derivada)
