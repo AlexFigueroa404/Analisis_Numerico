@@ -1,24 +1,27 @@
-import cmath
+
 import math
-import sympy as sp
+from sympy import *
 from tabulate import tabulate
 
-def fx(x):
-    return math.e**(x-1)+x
-def derivada(x):
-    return math.e**(x-1)+1
-def seg_derivada(x):
-    return math.e**(x-1)
+x,e = symbols('x e')
+
 def tolerancia(cifras):
     return 0.5*math.pow(10,2-cifras)
 
 def errorAproximacion(valorActual,valorAnterior):
     return abs((valorActual - valorAnterior)/(valorActual))*100
 
-def newton(f,deriv,seg_deriv,X0,cifras):
+def newton(fx,deriv,seg_deriv,x0,cifras):
     #Probar convergencia
-    valor1=float(X0)
-    if (abs((f(valor1)*seg_deriv(valor1))/(deriv(valor1)**2))<1):
+    fx=simplify(fx)
+    deriv=simplify(deriv)
+    seg_deriv=simplify(seg_deriv)
+
+    fx0=fx.subs(x,x0).subs(e,math.e)
+    deriv=deriv.subs(x,x0).subs(e,math.e)
+    seg_deriv=seg_deriv.subs(x,x0).subs(e,math.e)
+
+    if (abs((fx0*seg_deriv)/(deriv**2))<1):
         iteracion=1
 
         tabla=[]
@@ -26,14 +29,18 @@ def newton(f,deriv,seg_deriv,X0,cifras):
         # tabla.append(encabezado)
         Ea=1
         while Ea>tolerancia(cifras):
-            siguiente_valor=valor1-(f(valor1)/deriv(valor1))
-            Ea=abs((siguiente_valor-valor1)/siguiente_valor)*100
-            tabla.append([iteracion,valor1,f(valor1),deriv(valor1),siguiente_valor,Ea])
-            valor1=siguiente_valor
+            fx0=fx.subs(x,x0).subs(e,math.e)
+            deriv=deriv.subs(x,x0).subs(e,math.e)
+            seg_deriv=seg_deriv.subs(x,x0).subs(e,math.e)
+
+            siguiente_valor=x0-(fx0/deriv)
+            Ea=errorAproximacion(siguiente_valor,x0)
+            tabla.append([iteracion,x0,fx0,deriv,siguiente_valor,Ea])
+            x0=siguiente_valor
             iteracion+=1
 
     else:
         print("La funcion no converge")
     return tabla
-lista=newton(fx,derivada,seg_derivada,-0.3,3)
+lista=newton("e**(x-1)+x","e**(x-1)+1","e**(x-1)",-0.3,3)
 print(tabulate(lista,headers = ["Iteracion", "Xi", "f(Xi)", "f'(Xi)","Xi+1","Ea"],tablefmt="github"))
