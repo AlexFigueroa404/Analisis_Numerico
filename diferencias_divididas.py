@@ -92,14 +92,15 @@ def dif_divididas(fx, x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5, grado, int
         resultado.append(["b",b0, b1, b2, b3, b4, b5])
 
     interpolacion = polinomio.subs(x, interpo)
-    if type(interpo) != 0:
+    if interpo != 0:
         resultado.append(["Polinomio", "Interpolacion"])
         resultado.append([polinomio, interpolacion])
     else:
+        resultado.append(["Polinomio"])
         resultado.append([polinomio])
 
     return resultado
 lista = []
 lista = dif_divididas(0, -2, -1, 0, 2, 3, 6, -18, -5, -2, -2, 7, 142, 5, 1.5)
 
-print(tabulate(lista,headers = ["0", "1", "2", "3","4",'5']))
+print(tabulate(lista,headers = ["0", "1", "2", "3","4",'5'],tablefmt='fancy_grid'))
